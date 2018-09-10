@@ -1,0 +1,33 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <h2>Version Tracking Database</h2>
+        <ul>
+            <li><a href="~/swagger/">API Documentation</a></li>            
+            <li><a href="https://texasedu-my.sharepoint.com/:o:/g/personal/bryan_patton_tea_texas_gov/Emkuy_Y0zARJq1RH5PliWDwBNo-o2p9nE7mHqKWwCiRu0g">Design Documents</a></li>
+        </ul>
+    </div>
+    <div class="col-md-9">
+        <ul class="nav nav-tabs" id="homepageTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true">Statistics</a>
+            </li>            
+        </ul>
+        <div class="tab-content" id="homepageTabContent">
+            <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">   
+                <br/>
+                <section>
+                    <!--call deployment stats-->
+                    @await Component.InvokeAsync("DeploymentStatistics")
+
+
+                </section>
+            </div >
+        </div >
+    </div>
+</div >

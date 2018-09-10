@@ -1,0 +1,72 @@
+@page
+@model ApplicationVersionTracking.Pages.Events.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<i>Details</i>
+
+<div>
+    <h2 class="text-success">Event</h2>
+    <hr />
+    <div class="row">
+        <div class="col-lg-6">
+                <dl class="row">
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.Event.msiFile)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Event.msiFile)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.Event.Version)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Event.Version)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.Event.EventDate)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Event.EventDate)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.Event.Installer)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Event.Installer)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.Event.Application)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Event.Application.Name)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.Event.EnvironmentType)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Event.EnvironmentType.Description)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.Event.EventType)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Event.EventType.Description)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.Event.Server)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.Event.Server.Name)
+                    </dd>
+                </dl>
+        </div>
+
+    </div>
+        <div>
+            <a asp-page="./Edit" asp-route-id="@Model.Event.ID">Edit</a> |
+            <a asp-page="./Index">Back to List</a>
+        </div>
+</div>

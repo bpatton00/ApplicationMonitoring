@@ -1,0 +1,77 @@
+@page
+@model ApplicationVersionTracking.Pages.Events.FullListModel
+
+@{
+    ViewData["Title"] = "Full Event List";
+}
+
+<h2>Full Event List</h2>
+
+<div class="table-responsive-md">
+    <table class="table table-hover table-condensed">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].EventDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Application)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Version)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Server)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].EventType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Installer)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Event)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventDate)
+            </td>
+            <td>
+                <a href="~/Applications/Details?id=@item.ApplicationID" class="h6">@Html.DisplayFor(modelItem => item.Application.Name)</a>
+                <br />
+                <small><i>@Html.DisplayFor(modelItem => item.msiFile)</i></small>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Version)
+            </td>
+            <td>
+                <font class="@(item.EnvironmentType.Description == "Development" ? "badge badge-warning" : item.EnvironmentType.Description == "Test" ? "badge badge-info" : "badge badge-success")">
+                    @Html.DisplayFor(modelItem => item.EnvironmentType.Description)
+                </font>
+                <br />
+                <small><i><a href="~/Servers/Details?id=@item.ServerID">@Html.DisplayFor(modelItem => item.Server.Name)</a></i></small>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventType.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Installer)
+            </td>
+            <td>
+                <div class="float-right">
+                    <a asp-page="./Details" class="btn btn-secondary btn-sm " asp-route-id="@item.ID">Details</a>
+                    &nbsp;&nbsp;
+                    <a asp-page="./Edit" class="btn btn-outline-warning btn-sm " asp-route-id="@item.ID">Edit</a>
+                    <!--
+            <a asp-page="./Delete" class="btn btn-danger btn-sm " asp-route-id="@item.ID">Delete</a>
+            -->
+                </div>
+            </td>
+        </tr>
+}
+        </tbody>
+    </table>
+</div>

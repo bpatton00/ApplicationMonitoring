@@ -1,0 +1,12 @@
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\bin\Debug\netcoreapp2.0\ApplicationVersionTracking.deps.json
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\bin\Debug\netcoreapp2.0\ApplicationVersionTracking.runtimeconfig.json
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\bin\Debug\netcoreapp2.0\ApplicationVersionTracking.runtimeconfig.dev.json
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\bin\Debug\netcoreapp2.0\ApplicationVersionTracking.dll
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\bin\Debug\netcoreapp2.0\ApplicationVersionTracking.pdb
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\obj\Debug\netcoreapp2.0\ApplicationVersionTracking.csproj.CoreCompileInputs.cache
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\obj\Debug\netcoreapp2.0\ApplicationVersionTracking.AssemblyInfoInputs.cache
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\obj\Debug\netcoreapp2.0\ApplicationVersionTracking.AssemblyInfo.cs
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\obj\Debug\netcoreapp2.0\ApplicationVersionTracking.dll
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\obj\Debug\netcoreapp2.0\ApplicationVersionTracking.pdb
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\obj\Debug\netcoreapp2.0\ApplicationVersionTracking.csprojAssemblyReference.cache
+C:\Users\bpatton\Desktop\scmversioning\ApplicationVersionTracking\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs

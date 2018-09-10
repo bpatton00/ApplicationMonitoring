@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<!--
+	File Name:	Tea.AutomatedBuildSolutionTemplate.build
+	Purpose:	Master template used to create [Project Name].build file
+				This file is used as the hub for the automated build process activities by both the application developers and Software Builder
+
+	Target:		buildMain		-	build and packages the application
+				buildAndStage	-	calls buildMain and then stages the files on the staging server
+				StageToTest		-	re-staged a missing release on the staging server 
+
+	Comments:	Once this file is configured and running in an envirnment no further updates are normally required
+	
+	COMMAND_LINE_SAMPLE: add -D:singletag=true to the commandline to build with a single tag
+		set nantver=92
+		call nant -buildfile:Tea.[svn project name].build buildMain -D:build.version.number=1.0.0.1 -D:build.version.previous=Rel_0.0.0.0,Rel_1.0.0.0 -D:svn.userid=[your svn id] -D:svn.password=[your svn password] -D:singletag=true -D:email.build.results.to=[your email address]@tea.texas.gov -logger:NAnt.Core.MailLogger
+				
+	THIS DOCUMENT CONTAINS MATERIAL WHICH IS THE PROPERTY OF AND
+	CONFIDENTIAL TO THE TEXAS EDUCATION AGENCY. DISCLOSURE OUTSIDE
+	THE TEXAS EDUCATION AGENCY IS PROHIBITED, EXCEPT BY LICENSE OR
+	OTHER CONFIDENTIALITY AGREEMENT.
+	
+	COPYRIGHT 2006-2017 THE TEXAS EDUCATION AGENCY. ALL RIGHTS RESERVED.
+-->
+<!--
+	Required Property (Search and replace to change globably)
+	    
+		You must set the following properties for the target project before running this build script!
+		
+		[Property]				- [Description]
+		
+		solution.file.name		- the solution file name (replace [SolutionName] w/solution file name, most likely same as project.name)
+		tea.projects.dir		- tea projects parent directory (most likely C:\TEA)
+		svn.project.name		- Subversion source code repository name
+		tea.project.dir			- the project directory ([ProjectDirName]=most likely same as project.name)
+		solution.root.dir		- directory containing the solution
+		project.name			- [ProjName]=used as input for folder/file names, documentation and email subject line
+								- same as svn.project.name execpt for old projects that use uppercase in folder names from VM
+		crystal.reports.dirs	- name value pairs of CR directories [label for documentation],[CR source location];
+		sql.dir					- source to find sql scripts used to compile
+		sql.dirs				- name value pairs of SQL directories [label for documentation],[SQL source location];
+		sql.ssis.dirs			- name value pairs of SSIS directories - friendly name pair must contain "SSIS"
+		svn.project.list		- use '.' ( for the root of a svn project)
+									or if embedded or Subprojects are to be built use ' [SubProjectFolderName]/Solution '
+									where [SubProjectFolderName] is the first folder under the root in svn.
+									The value of this property will most likely match the 'svn.root.dir' property above.
+		MailLogger.from			- email address email sent from
+		email.build.results.to	- email addr to send msg to; Note: the UID/PSWD is included in this email
+		compiler.dir			- path to Visual Studio for command line action
+		dev.db.login			- login used in scripts on dev database to be replaced w/dbo
+		apps.server.name		- Application server to receive copy of msi file(s)
+		db.server.name			- Database server to receive copy of SQL file(s)
+		report.server.name		- Report server to receive copy of Crystal Report zip file(s)
+
+	Assumptions / Prerequisites:
+
+		- SVN Project configuration should match the local disk structure as follows:
+		- SVN_Project_Root\Solution\Tea.[ProjectName].Web
+		
+		- The VS project/disk configuration is as follow
+			C:\TEA\[svn project name]\Solution\Tea.[ProjectName].sln
+				\Tea.[ProjectName].Business\*
+				\Tea.[ProjectName].CrystalReports\*
+				\Tea.[ProjectName].Common\*
+				\Tea.[ProjectName].DataAccess\*
+				\Tea.[ProjectName].Sql\*
+				\Tea.[ProjectName].Setup\*
+				\Tea.[ProjectName].Test\*
+				\Tea.[ProjectName].Web\*
+				\Build
+				*represents a project in Visual Studio and a folder in SVN
+				
+				Please refer to the "Directory Structure for Automated Builds" document on the Build Software Sharepoint site for structure details
+				https://texasedu.sharepoint.com/:w:/r/sites/its/app/dev/build
+				
+		- The [svn project name] above must be identical to the actual folder/SVN name and project.name
+		- All canonical files used to create MSI are labeled in SVN according to the TEA standard
+		- Setup project convention: the setup project name = Tea.project.name + 'Setup'
+		- The setup project file '*.vdproj' is checked into SVN and tagged
+		- The solution is configured to build the msi in release mode only
+-->
+
+	<project name="BuildSolution" default="buildMain" basedir="." xmlns="http://nant.sf.net/release/0.92/nant.xsd">
+
+	<description>This is a TEA template for the standard build file. This file can be extended by individual developers/projects. The include files are designed to be extended as needed when applicable to all applications using the build process at TEA.	</description>
+		
+    <!--
+		Global Properties 							
+	-->
+	<!-- project configurable -->
+	<property name="solution.file.name" value="Tea.scmversioning.sln" /> 
+	<property name="tea.projects.dir" value="C:\TEA\" />
+	<property name="svn.project.name" value="scmversioning"/>
+	<property name="tea.project.dir" value="${tea.projects.dir}${svn.project.name}\" />
+	<property name="solution.root.dir" value="${tea.project.dir}Solution\" />
+	<property name="deploy.dir" value="${path::combine(tea.project.dir, 'Solution\Deploy')}" if="${not property::exists('deploy.dir')}" />
+	<property name="nuget.dir" value="${tea.project.dir}Solution\ThirdParty\" />
+	<property name="project.name" value="${svn.project.name}" />
+	
+	
+	<!-- subversion properties -->
+	<property name="svn.project.url" value="https://tea4avrush.tea.state.tx.us/svn/repos/${svn.project.name}"/>
+    <!--property name="svn.project.doc.url" value="${svn.project.url}/trunk/Documentation"/-->
+	<property name="svn.project.list" value="."/>
+	<property name="svn.include.subprojects" value="true"/>
+	<!-- Compiler defaults VS2017 -->
+	<property name="compiler.dir" value="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\"/>
+		
+	<property name="apps.server.name" value="tea4afshr02" if="${not property::exists('apps.server.name')}"  />
+	<property name="db.server.name" value="tea4afshr02" if="${not property::exists('db.server.name')}" />
+	<property name="report.server.name" value="tea4afshr02" if="${not property::exists('report.server.name')}" />
+
+	
+	<!-- static properties; Changes here may not conform to TEA standard -->
+
+	<property name="solution.file.path" value="${solution.root.dir}${solution.file.name}" /> 
+	<property name="build.dir" value="${tea.project.dir}Build\" />
+	<property name="build.configuration" value="release" if="${not property::exists('build.configuration')}" />
+	<property name="working.dir" value="${build.dir}Temp\" /> 
+	<property name="results.dir" value="${build.dir}Results\" /> 
+	<property name="web.dir" value="${solution.root.dir}ApplicationVersionTracking\" />
+	<property name="web.bin.dir" value="${web.dir}bin\" />
+	<property name="setup.dir" value="${solution.root.dir}Tea.${project.name}.WebSetup\" />
+	<property name="setup.dir.release" value="${setup.dir}Release\" />
+	<property name="singletag" value="true" if="${not property::exists('singletag')}" /> 
+	<property name="build.version.prefix" value="Rel_" if="${not property::exists('build.version.prefix')}" /> 
+	<property name="build.version.label" value="${build.version.prefix}${build.version.number}" /> 
+	<property name="email.build.results.to" value="IVVBuilder@tea.texas.gov" if="${not property::exists('email.build.results.to')}" />
+	<property name="MailLogger.from" value="BuildMaster@tea.texas.gov"/> 
+	<property name="MailLogger.mailhost" value="tea4AvBuild.tea.state.tx.us"/>
+	<property name="MailLogger.failure.notify" value="true"/> 
+	<property name="MailLogger.success.notify" value="true"/> 
+	<property name="MailLogger.failure.to" value="${email.build.results.to}"/> 
+	<property name="MailLogger.success.to" value="${email.build.results.to}"/> 
+	<property name="MailLogger.failure.subject" value="${svn.project.name}_${build.version.label}_Build Failure on ${string::to-upper(environment::get-machine-name())}" />
+	<property name="MailLogger.success.subject" value="${svn.project.name}_${build.version.label}_Build Success on ${string::to-upper(environment::get-machine-name())}" />
+	<property name="fxcop.projects" value="All,${solution.root.dir}Tea.${project.name}.FxCop" />
+
+
+	<!-- Shared include files -->
+	<property name="buildincludes.path" value="\\Tea4AvBuild\buildincludes\" if="${not property::exists('buildincludes.path')}" /> 	
+	<include buildfile="${buildincludes.path}AssemblyVersion.build" />
+	<include buildfile="${buildincludes.path}NoDefault.build" />
+	<include buildfile="${buildincludes.path}PrepareResultsFolders.build" />
+	<include buildfile="${buildincludes.path}SourceControl.build" />
+	<include buildfile="${buildincludes.path}BuildSolution.build" />
+
+	<include buildfile="${buildincludes.path}SQLScripts.build" />
+	<include buildfile="${buildincludes.path}GetChangedFiles.build" />
+	<include buildfile="${buildincludes.path}StageFiles.build" />	
+	<include buildfile="${buildincludes.path}StageToTest.build" />
+	<include buildfile="${buildincludes.path}ResultDocsToSVN.build" />
+	<include buildfile="${buildincludes.path}FxCop.build" />		
+	<include buildfile="${buildincludes.path}UpdateSetupProject.build" />
+	
+
+	<!-- Custom include files -->
+	<!-- <include buildfile="WiX.build" /> -->
+    
+    <!--
+		Global Targets
+	-->
+    
+	<target name="buildMain" description="Performs full build; gets from source control and compiles the source code">
+		<call target="PrepareFolders" />
+		<call target="GetLabeledVersion"/>		
+		<call target="SetAssemblyVersions" />
+		
+		<call target="SetRetailCompilation" />		
+		<call target="UpdateSetupProjects" />
+		
+		<call target="BuildSolution" />		
+		<call target="GetHistory" />
+		<call target="VersionHistoryHtmlReport" />
+			
+		<call target="DeployToResult" />
+		
+		<!-- Custom target -->
+		<!-- <call target="WiX" /> -->
+    </target>
+    
+	<target name="buildAndStage" description="This target is required by the Automated Build Process and only used by IVV Builder. This target performs a Release or Retail or Production build of the product based on the buildMain target and then stages the resulting artifacts at apps.server.name\ApplicationStaging.">
+		<call target="buildMain" />
+		<!-- <call target="getAppOfflineFiles" /> Added by AJS 20070717:ToDo:Add to svn-->
+		<call target="StageToTest" />
+		<call target="ResultDocsToSVN" />
+	</target>
+
+</project>

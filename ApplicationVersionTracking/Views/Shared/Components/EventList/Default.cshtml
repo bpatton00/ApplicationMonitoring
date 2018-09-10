@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ApplicationVersionTracking.Models.Event>
+@if (ViewBag.serverID != null)
+{
+    @foreach (string AppName in Model.Select(x => x.Application.Name).Distinct())
+    {
+        <h5 class="card-title"><i class="fas fa-file-code"></i> <a href="~/Applications?applicationName=@AppName">@AppName</a></h5>
+        @foreach (var evnt in Model.Where(a => a.Application.Name == AppName).Take(5))
+        {
+            <small>
+                <div class="col"><font class="desc">Msi:</font> @evnt.msiFile</div>
+                <div class="col"><font class="desc">Version:</font>  @evnt.Version</div>
+                <div class="col"><font class="desc">Installer:</font>  @evnt.Installer</div>
+                <div class="col"><font class="desc">Date:</font>  @evnt.EventDate</div>                
+            </small>
+            <br />
+        }
+    }
+}
+else
+{
+    @foreach (string ServerName in Model.Select(x => x.Server.Name).Distinct())
+    {
+            <h5 class="card-title"><i class="fas fa-server"></i> <a href="~/Servers?serverName=@ServerName">@ServerName</a></h5>
+        @foreach (var evnt in Model.Where(a => a.Server.Name == ServerName).Take(1))
+        {
+            <small>
+                <div class="col"><font class="desc">Msi:</font> @evnt.msiFile</div>
+                <div class="col"><font class="desc">Version:</font>  @evnt.Version</div>
+                <div class="col"><font class="desc">Installer:</font>  @evnt.Installer</div>
+                <div class="col"><font class="desc">Date:</font>  @evnt.EventDate</div>
+                <div class="col"><a href="~/Servers/Details?ID=@evnt.ServerID " data-toggle="tooltip" data-placement="top" title="View Server Inventory"><i class="far fa-window-restore"></i></a></div>
+            </small>
+            <br />
+        }
+
+    }
+
+}

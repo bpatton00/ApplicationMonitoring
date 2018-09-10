@@ -1,0 +1,44 @@
+@page
+@model ApplicationVersionTracking.Pages.Projects.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Projects</h2>
+
+<p>
+    <a asp-page="Create" class="btn btn-success btn-sm">Create New</a>
+</p>
+<div class="table-responsive-md">
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Project[0].Name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Project)
+            {
+                <tr>
+                    <td>
+                        <a href="~/Projects/Details?id=@Html.DisplayFor(modelItem => item.ID)" class="primaryname">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </td>
+                    <td>
+                        <div class="float-right">
+                            <a asp-page="./Details" class="btn btn-outline-secondary btn-sm " asp-route-id="@item.ID"><i class="fas fa-info-circle"></i> Details</a>
+                            &nbsp;&nbsp;
+                            <a asp-page="./Edit" class="btn btn-outline-warning btn-sm " asp-route-id="@item.ID"><i class="fas fa-edit"></i> Edit</a>
+                            <!--
+                            <a asp-page="./Delete" class="btn btn-danger btn-sm " asp-route-id="@item.ID">Delete</a>
+                            -->
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>

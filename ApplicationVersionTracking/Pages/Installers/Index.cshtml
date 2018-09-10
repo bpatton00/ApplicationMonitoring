@@ -1,0 +1,61 @@
+@page
+@model ApplicationVersionTracking.Pages.Events.IndexModel
+
+@{
+    ViewData["Title"] = "Installer List";
+}
+<style type="text/css">
+    .statbox{
+        border-left:1px solid grey;
+        padding-left:10px;
+    }
+   
+</style>
+<h2>List of Installers</h2>
+
+<div class="table-responsive-md">
+    <div class="list-group">
+        @foreach (var item in Model.Event.Select(x => x.Installer).Distinct().OrderBy(x => x))
+        {
+        <a href="~/Events/ByInstaller?Installer=@System.Net.WebUtility.UrlEncode(item)" class="list-group-item list-group-item-action">
+            @Html.DisplayFor(modelItem => item)
+            <div class="float-right">
+                <div class="float-left text-left" style="width: 6rem;">
+                    <div class="">
+                        <span class="card-title">Dev</span>
+                        <span class="badge badge-warning">
+                            @Model.Event.Where(x => x.Installer == item).Where(x => x.EnvironmentTypeID == 1).Count().ToString("n0")
+                        </span>
+                    </div>
+                </div>
+                <div class="float-left text-left" style="width: 6rem;">
+                    <div class="">
+                        <span class="card-title">Test</span>
+                        <span class="badge badge-info">
+                            @Model.Event.Where(x => x.Installer == item).Where(x => x.EnvironmentTypeID == 2).Count().ToString("n0")
+                        </span>
+                    </div>
+                </div>
+                <div class="float-left text-left" style="width: 6rem;">
+                    <div class="">
+                        <span class="card-title">Prod</span>
+                        <span class="badge badge-success">
+                            @Model.Event.Where(x => x.Installer == item).Where(x => x.EnvironmentTypeID == 3).Count().ToString("n0")
+                        </span>
+                    </div>
+                </div>
+                <div class="float-left text-left" style="width: 8rem;">
+                    <div class="y">
+                        <b class="card-title">Total</b>
+                        <span class="badge badge-dark">
+                            @Model.Event.Where(x => x.Installer == item).Count().ToString("n0")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        }        
+    </div>
+
+    
+</div>

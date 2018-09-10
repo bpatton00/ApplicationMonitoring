@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ApplicationVersionTracking.Models.Application>
+<div class="row">
+    <div class="col-12">
+        <h4 class="text-primary">Current Versions</h4>
+        <br />
+    </div>
+    <div class="col-lg-12">
+        @foreach (var app in Model)
+        {
+
+            <div class="card mb-4 box-shadow h-md-250">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <h3 class="mb-1">
+                        <a class="text-dark" href="~/Applications/Details?id=@app.ID">@app.Name</a>
+                    </h3>
+                </div>
+                <div style="max-height:200px;overflow-y:auto;">
+                    <table class="table table-hover table-condensed">
+                        <thead>
+                            <tr class="d-flex">
+                                <th class="col-3"><font class="desc">Environment</font></th>
+                                <th class="col-3"><font class="desc">Version</font></th>
+                                <th class="col-3"><font class="desc">Server</th>
+                                <th class="col-3"><font class="desc">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--not using the re-usable control here to prevent reloading data-->
+                            @await Component.InvokeAsync("EventListRow", new { ApplicationId = app.ID })
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+        }
+    </div>
+</div>

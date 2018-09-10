@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ApplicationVersionTracking.Models.Event>
+
+
+<div class="row">
+    <br />
+    <div class="col-12"><h4 class="text-primary">Weekly Deployment Counts</h4><br /></div>
+
+    <div class="col">
+        <div class="card box-shadow mb-3 border-warning">
+            <div class="card-header text-white bg-warning text-center">Development</div>
+            <div class="card-body text-center">
+                <h3 class="text-dark">
+                    @Model.Where(x => x.EnvironmentTypeID == 1).Where(a => a.EventDate > DateTime.Now.AddDays(-1 * 7)).Count()
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-1 align-self-center text-center">
+        <i class="fas fa-angle-double-right" style="color:#d0d0d0;font-size: 4vw;"></i>
+    </div>
+    <div class="col">
+        <div class="card box-shadow mb-3 border-info">
+            <div class="card-header text-white bg-info text-center">Test</div>
+            <div class="card-body text-center">
+                <h3 class="text-dark">
+                    @Model.Where(x => x.EnvironmentTypeID == 2).Where(a => a.EventDate > DateTime.Now.AddDays(-1 * 7)).Count()
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-1 align-self-center text-center">
+        <i class="fas fa-angle-double-right" style="font-size: 4vw;"></i>
+    </div>
+    <div class="col">
+        <div class="card box-shadow mb-3 border-success">
+            <div class="card-header text-white bg-success text-center">Production</div>
+            <div class="card-body text-center">
+                <h3 class="text-dark">
+                    @Model.Where(x => x.EnvironmentTypeID == 3).Where(a => a.EventDate > DateTime.Now.AddDays(-1 * 7)).Count()
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+<br /><br /><br />
+<div class="row">
+
+    <div class="col-12 text-center"><h4 class="text-primary">Environments</h4><br /></div>
+
+    <div class="col-lg-3 offset-lg-3 col-sm-6">
+        <div class="card box-shadow mb-3 border-light">
+            <div class="card-header bg-light text-center">Applications</div>
+            <div class="card-body text-center">
+                <h3 class="text-dark">
+                    @Model.Select(x => x.ApplicationID).Distinct().Count()
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6">
+        <div class="card box-shadow mb-3 border-light">
+            <div class="card-header bg-light text-center">Servers</div>
+            <div class="card-body text-center">
+                <h3 class="text-dark">
+                    @Model.Select(x => x.ServerID).Distinct().Count()
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    @Html.Partial("~/Views/Event/EventBarChart.cshtml", Model)
+</div>

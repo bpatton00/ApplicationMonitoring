@@ -1,0 +1,64 @@
+@page
+@model ApplicationVersionTracking.Pages.Events.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="row">
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Version)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Version)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.EventDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EventDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Installer)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Installer)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Application)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Application.ID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.EnvironmentType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EnvironmentType.ID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.EventType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EventType.ID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event.Server)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.Server.ID)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Event.ID" />
+        <input type="submit" value="Delete" class="btn btn-secondary" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

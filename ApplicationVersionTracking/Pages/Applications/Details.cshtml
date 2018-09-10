@@ -1,0 +1,84 @@
+@page
+@model ApplicationVersionTracking.Pages.Applications.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<i>Details</i>
+
+<div>
+    <h2 class="text-success">@Html.DisplayFor(model => model.Application.Name)</h2>
+    <hr />
+    <div class="row">
+        <div class="col-lg-6">
+            <dl class="row">
+                <dt class="col-6">
+                    @Html.DisplayNameFor(model => model.Application.DisplayName)
+                </dt>
+                <dd class="col-6">
+                    @Html.DisplayFor(model => model.Application.DisplayName)
+                </dd>
+                <dt class="col-6">
+                    @Html.DisplayNameFor(model => model.Application.ActiveTFRelease)
+                </dt>
+                <dd class="col-6">
+                    @Html.DisplayFor(model => model.Application.ActiveTFRelease)
+                </dd>
+                <dt class="col-6">
+                    @Html.DisplayNameFor(model => model.Application.Project)
+                </dt>
+                <dd class="col-6">
+                    <a href="~/Projects/Details?id=@Html.DisplayFor(model => model.Application.Project.ID)">
+                        @Html.DisplayFor(model => model.Application.Project.Name)
+                    </a>
+                </dd>
+                <dt class="col-6">
+                    @Html.DisplayNameFor(model => model.Application.StatusType)
+                </dt>
+                <dd class="col-6">
+                    @Html.DisplayFor(model => model.Application.StatusType.Description)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div>
+        <a asp-page="./Edit" asp-route-id="@Model.Application.ID">Edit</a> |
+        <a asp-page="./Index">Back to List</a>
+    </div>
+    <br />
+    <h3><span class="fas fa-cloud" style="color:green;"></span> Environment Status</h3>
+    <hr />
+    <div class="row versionInfo">
+        <div class="col-lg-4">
+            <div class="card mb-2 border-warning">
+                <div class="card-header text-white bg-warning"><span class="">Dev</span></div>
+                <div class="card-body">
+                    @await Component.InvokeAsync("EventList", new { applicationID = Model.Application.ID, EnvironmentID = 1, topRows = 1 })
+                </div>                
+            </div>
+            <a href="~/Events/FullList?App=@Model.Application.ID&Env=1" class="btn btn-block btn-sm btn-outline-warning"><i class="fas fa-angle-double-down float-left"></i>Full List<i class="fas fa-angle-double-down float-right"></i></a>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-2 border-info">
+                <div class="card-header text-white bg-info">Test</div>
+                <div class="card-body">
+                    @await Component.InvokeAsync("EventList", new { applicationID = Model.Application.ID, EnvironmentID = 2, topRows = 1 })
+                </div>                
+            </div>
+            <a href="~/Events/FullList?App=@Model.Application.ID&Env=2" class="btn btn-block btn-sm btn-outline-info"><i class="fas fa-angle-double-down float-left"></i>Full List<i class="fas fa-angle-double-down float-right"></i></a>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-2 border-success">
+                <div class="card-header text-white bg-success">Prod</div>
+                <div class="card-body">
+                    @await Component.InvokeAsync("EventList", new { applicationID = Model.Application.ID, EnvironmentID = 3, topRows = 1 })
+                </div>
+            </div>
+            <!-- full list link -->
+            <a href="~/Events/FullList?App=@Model.Application.ID&Env=3" class="btn btn-block btn-sm btn-outline-success"><i class="fas fa-angle-double-down float-left"></i>Full List<i class="fas fa-angle-double-down float-right"></i></a>
+        </div>
+    </div>
+
+</div>
+

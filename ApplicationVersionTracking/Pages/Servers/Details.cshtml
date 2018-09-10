@@ -1,0 +1,39 @@
+@page
+@model ApplicationVersionTracking.Pages.Servers.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<i>Details</i>
+
+<div>
+    <h2 class="text-success">@Html.DisplayFor(model => model.Server.Name)</h2>
+    <hr />
+    <div class="row">
+        <div class="col-lg-6">
+            <dl class="row">                
+                <dt class="col-6">
+                    @Html.DisplayNameFor(model => model.Server.StatusType)
+                </dt>
+                <dd class="col-6">
+                    @Html.DisplayFor(model => model.Server.StatusType.Description)
+                </dd>
+            </dl>
+            <div>
+                <a asp-page="./Edit" asp-route-id="@Model.Server.ID">Edit</a> |
+                <a asp-page="./Index">Back to List</a>
+            </div>
+            <br />
+            <h3><span class="fas fa-hdd" style="color:green;"></span> Inventory</h3>
+            <hr />
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">Application Inventory</div>
+                <div class="card-body">
+                    @await Component.InvokeAsync("EventList", new { serverID = Model.Server.ID })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

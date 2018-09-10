@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ApplicationVersionTracking.Models.Application>
+
+@foreach (var app in Model)
+{    
+<tr class="d-flex">
+    <td class="col-4">
+        @app.DisplayName <small><a href="~/Applications/Details?id=@app.ID"><i>[ @app.Name ]</i></a></small>
+    </td>    
+    <td class="col-4">
+        @app.StatusType.Description
+    </td>
+    <td class="col-4">
+        <div class="list-group">
+            @foreach (var svr in app.Events.Select(x => x.Server).Distinct().OrderBy(x => x.Name))
+            {                
+                <a href="~/Servers/Details?ID=@svr.ID" class="list-group-item list-group-item-action">@svr.Name <small><span class="@(svr.StatusType.Description.ToLower().Trim() != "active" ? "fas fa-alert" : "")" style="color:orange;" title="Disabled" data-toggle="tooltip" data-placement="right"></span></small></a>                
+            }
+        </div>
+
+    </td>    
+    
+</tr>
+}

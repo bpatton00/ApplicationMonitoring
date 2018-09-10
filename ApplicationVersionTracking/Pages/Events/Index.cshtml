@@ -1,0 +1,134 @@
+@page
+@model ApplicationVersionTracking.Pages.Events.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Events</h2>
+
+<p>
+    <a asp-page="Create" class="btn btn-success btn-sm">Create New</a>
+</p>
+<form name="userinput" class="float-md-right">
+    <div class="form-inline">
+        <div class="form-group mb-2 mx-sm-3">
+            <label for="Env" class="col-form-label">Environment:</label>&nbsp;
+            <div id="environments" class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                    <input type="radio" name="Env" id="option1" value="1"> Development
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="Env" id="option2" value="2"> Test
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="Env" id="option3" value="3"> Production
+                </label>
+            </div>
+        </div>
+        <div class="form-group mb-2">
+            <label for="applicationName" class="col-form-label">Application Name:</label>&nbsp;
+            <input type="text" name="applicationName" class="form-control-sm">
+        </div>
+        <div class="form-group mb-2 mx-sm-3">
+
+            <input type="submit" value="Filter" class="btn btn-secondary btn-sm" />
+        </div>
+    </div>
+</form>
+<div class="table-responsive-md">
+    <table class="table table-hover table-condensed">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].EventDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Application)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Version)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Server)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].EventType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Installer)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Event.Take(50))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EventDate)
+                    </td>
+                    <td>
+                        <a href="~/Applications/Details?id=@item.ApplicationID" class="primaryname">@Html.DisplayFor(modelItem => item.Application.Name)</a>
+                        <br />
+                        <small><i>@Html.DisplayFor(modelItem => item.msiFile)</i></small>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Version)
+                    </td>
+                    <td>
+                        <font class="@(item.EnvironmentType.Description == "Development" ? "badge badge-warning" : item.EnvironmentType.Description == "Test" ? "badge badge-info" : "badge badge-success")">
+                            @Html.DisplayFor(modelItem => item.EnvironmentType.Description)
+                        </font>
+                        <br />
+                        <small><i class="fas fa-server"></i> <i><a href="~/Servers/Details?id=@item.ServerID">@Html.DisplayFor(modelItem => item.Server.Name)</a></i></small>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EventType.Description)
+                    </td>
+                    <td>
+                        <a href="~/Events/ByInstaller?Installer=@item.Installer">
+                            @Html.DisplayFor(modelItem => item.Installer)
+                        </a>
+                    </td>
+                    <td>
+                        <div class="float-right">
+                            <a asp-page="./Details" class="btn btn-outline-secondary btn-sm " asp-route-id="@item.ID"><i class="fas fa-info-circle"></i> Details</a>
+                            &nbsp;&nbsp;
+                            <a asp-page="./Edit" class="btn btn-outline-warning btn-sm " asp-route-id="@item.ID"><i class="fas fa-edit"></i> Edit</a>
+                            <!--
+                            <a asp-page="./Delete" class="btn btn-danger btn-sm " asp-route-id="@item.ID">Delete</a>
+                            -->
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts { 
+    <script type="text/javascript">
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+        $(document).ready(function () {
+            var env = getUrlParameter('Env');    
+            $(":radio[value=" + env + "]").prop('checked', true);
+            $(":radio[value=" + env + "]").parent('.btn').addClass('active');
+            $('input[type=radio]').on('change', function () {
+                $(this).closest("form").submit();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,49 @@
+@page
+@model ApplicationVersionTracking.Pages.Projects.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<i>Details</i>
+
+<div>
+    <h2 class="text-success"> @Html.DisplayFor(model => model.Project.Name)</h2>
+    <hr />
+    <div class="row">
+        <div class="col-lg-6">
+            <dl class="row">
+
+                <dt class="col-6">
+                    @Html.DisplayNameFor(model => model.Project.TFprojID)
+                </dt>
+                <dd class="col-6">
+                    @Html.DisplayFor(model => model.Project.TFprojID)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div>
+        <a asp-page="./Edit" asp-route-id="@Model.Project.ID">Edit</a> |
+        <a asp-page="./Index">Back to List</a>
+    </div>
+    <br />
+    <h3><span class="fas fa-hdd" style="color:green;"></span> Inventory</h3>
+    <hr />
+    <div class="card border-success">
+        <div class="card-header bg-success text-white">Project Inventory</div>
+        <div class="">
+            <table class="table table-condensed table-hover">
+                <tbody>
+                    <tr class="d-flex">
+                        <th class="col-4">Application</th>
+                        <th class="col-4">Status</th>
+                        <th class="col-4">Servers</th>
+                    </tr>
+                    @await Component.InvokeAsync("ProjectMemberList", new { projectID = Model.Project.ID })
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
